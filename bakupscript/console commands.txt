@@ -1,0 +1,38 @@
+//node 1
+"enode://b3f8a16f7aeeb4bf5a4c8ebbee9f94f2f859fec406f3a054e2d12cd4ccca8965cfc8ae759037a577db50c8efe6731dad91ac78e75b96c4f9bb14c70a629bbb46@127.0.0.1:30303?discport=0"
+
+//node 2
+"enode://23bc35b97a8f43a0660c816ba138cd3a8c05bfda22af6f346bfec94a966c0a31e3ef823ddc78af24d5036e3e32fd9747d8401435742cef451ceb0a3989d166e1@127.0.0.1:30304"
+
+
+//link solc to geth
+admin.setSolc("/Ethereum/Webthree-Umbrella/solc.exe");
+
+//check current compiler
+eth.getCompilers();
+
+///list accounts
+personal.listAccounts;
+personal.newAccount('Aingzy1234');
+personal.newAccount('PrivateTest1234'); //account address: 0xf976EE6cFF5E0dFFe39Ad3a39cD45EB0e15D80f6, wallet address : 0x479E8f2F015292a36F8cd6671ABaf5Eca0811207
+
+//node2 account
+personal.newAccount('Node21234');
+
+//node3 account
+personal.newAccount('Node31234');
+
+
+//loadScript
+loadScript("D:/Ethereum/PrivateBlock/js/checkAllBalances.js");
+
+
+//add node1 as peer
+admin.addPeer("enode://23bc35b97a8f43a0660c816ba138cd3a8c05bfda22af6f346bfec94a966c0a31e3ef823ddc78af24d5036e3e32fd9747d8401435742cef451ceb0a3989d166e1@127.0.0.1:30304")
+
+//add node2 as peer
+admin.addPeer('enode://fe2e2b02de385907641dd5e16e0fec4a87067c4a33c7667eaf6df296869d7f3aa068313e28fe795b9daae0d52a9e74271a2be0d959c1dac825eb93a1aad64e5a@[::]:30303')
+
+
+//checking account balance;
+web3.fromWei(eth.getBalance(eth.accounts[0]).toNumber(), "ether")
