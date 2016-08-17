@@ -23,7 +23,7 @@
     "prestart": "browserify ./app/js/services.js -o ./app/js/services_c.js",
     "start": "http-server -a localhost -p 1237 -c-1 ./app",
 
-    "pretest": "npm install",
+    "pretest": "browserify app/js/services.js -o app/js/services_c.js",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js --single-run",
 

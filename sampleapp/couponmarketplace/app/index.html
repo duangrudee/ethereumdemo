@@ -30,27 +30,22 @@
   <script src="app.js"></script>
   <script src="js/controllers.js"></script>
   <script src="js/services_c.js"></script>
-  <script src="contracts/couponabi.js"></script>
+  <script src="contracts/contractconfig.js"></script>
     
- <!--<div  class="rcorners2">
-   <h3>Execute pre-deployed coupon Contract</h3>
-    <p>Address: <input type="text" ng-model="address"></p> 
-    <button ng-click="executecoupon()">Execute</button>
-    <p>coupon Say: <span ng-bind="executeResult"></span></p>
- </div>
- -->
 
   <br>
-   <div  class="rcorners2">
-    <h3>Create a new coupon</h3>
-    <p>What do you want to say: <input type="text" ng-model="greetingText"></p>
-    <p>How much gas you want to spend: <input type="text" ng-model="gasPrice"></p>   
-     <button ng-click="createCoupon()">Deploy</button>
+   <div  class="rcorners2">     
+    <h3>For Seller - Create a new coupon</h3>
+    <p>Title : <input type="text" ng-model="title"></p>
+    <p>Deal Description : <input type="text" ng-model="description"></p>
+    <p>Sell Price : <input type="text" ng-model="price"></p>       
+    <button ng-click="newCoupon()">New Coupon</button>
     <p>Result: <span ng-bind="createCouponResult"></span></p>  
   </div> 
  
+ 
    <div  class="rcorners2">
-    <h3>Current Lists</h3>
+    <h3>Coupons in our Market</h3>
     
     <input type="text" ng-model="nameFilter" placeholder="Search..."/>
     <table>
@@ -59,12 +54,12 @@
     </thead>
     <tbody>
       <tr ng-repeat="coupon in couponList | filter: searchFilter">
-        <td>{{$index + 1}}</td>
-        <td>       
-          <a href="#/drivers/{{coupon.Coupon.couponId}}">
+      <!--  <td>{{$index + 1}}</td>
+          <td>       
+          <a href="#/coupons/{{coupon.Coupon.couponId}}">
           {{coupon.Coupon.Name}}&nbsp;{{coupon.Coupon.Description}}
         </a>
-  <!--    </td>
+    </td>
         <td>{{driver.Constructors[0].name}}</td>
         <td>{{driver.points}}</td>
     -->

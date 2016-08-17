@@ -1,4 +1,4 @@
-angular.module('greeter.services', [])
+angular.module('coupon.services', [])
 
   .factory('Web3Service', function() {
       
