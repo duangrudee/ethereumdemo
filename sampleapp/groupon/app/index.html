@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="coupon" class="no-js"> 
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Coupon Market Place</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="app.css">
+  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+
+  <style>
+  .rcorners2 {
+    border-radius: 25px;
+    border: 2px solid #73AD21;
+    padding: 5px;
+  }
+</style>
+</head>
+
+<body ng-controller="couponController">
+  
+  <h1>Welcome to coupon market place</h1>
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  
+  <script src="app.js"></script>
+  <script src="js/controllers.js"></script>
+  <script src="js/services_c.js"></script>
+  <script src="contracts/couponabi.js"></script>
+    
+ <!--<div  class="rcorners2">
+   <h3>Execute pre-deployed coupon Contract</h3>
+    <p>Address: <input type="text" ng-model="address"></p> 
+    <button ng-click="executecoupon()">Execute</button>
+    <p>coupon Say: <span ng-bind="executeResult"></span></p>
+ </div>
+ -->
+
+  <br>
+   <div  class="rcorners2">
+    <h3>Create a new coupon</h3>
+    <p>What do you want to say: <input type="text" ng-model="greetingText"></p>
+    <p>How much gas you want to spend: <input type="text" ng-model="gasPrice"></p>   
+     <button ng-click="createCoupon()">Deploy</button>
+    <p>Result: <span ng-bind="createCouponResult"></span></p>  
+  </div> 
+ 
+   <div  class="rcorners2">
+    <h3>Current Lists</h3>
+    
+    <input type="text" ng-model="nameFilter" placeholder="Search..."/>
+    <table>
+    <thead>
+      <tr><th colspan="4">Current Coupons listed in our market</th></tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="coupon in couponList | filter: searchFilter">
+        <td>{{$index + 1}}</td>
+        <td>       
+          <a href="#/drivers/{{coupon.Coupon.couponId}}">
+          {{coupon.Coupon.Name}}&nbsp;{{coupon.Coupon.Description}}
+        </a>
+  <!--    </td>
+        <td>{{driver.Constructors[0].name}}</td>
+        <td>{{driver.points}}</td>
+    -->
+      </tr>
+    </tbody>
+    </table>
+  </div> 
+  
+</body>
+</html>
