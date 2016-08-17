@@ -1,0 +1,7 @@
+//This code is generated from https://ethereum.github.io/browser-solidity
+//1. Copy solidity contract from coupon.sol
+//2. Copy the compiled code from Web3 deploy to this file
+//3. Copy Application Binary Interace from "Interace" to couponabi.js
+
+//copy and paste this to get console to deploy.
+
