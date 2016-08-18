@@ -1,5 +1,5 @@
 //node 1
-"enode://b3f8a16f7aeeb4bf5a4c8ebbee9f94f2f859fec406f3a054e2d12cd4ccca8965cfc8ae759037a577db50c8efe6731dad91ac78e75b96c4f9bb14c70a629bbb46@127.0.0.1:30303?discport=0"
+"enode://a96972571f7534f6d1522910d3241baf3ab639abffec76d876236ef0623c5b91334ff5fd183b387a690d5de754a6291640d1ccddd5b0b5e331319efcb7d0550e@127.0.0.1:30303?discport=0"
 
 //node 2
 "enode://23bc35b97a8f43a0660c816ba138cd3a8c05bfda22af6f346bfec94a966c0a31e3ef823ddc78af24d5036e3e32fd9747d8401435742cef451ceb0a3989d166e1@127.0.0.1:30304"
@@ -14,6 +14,7 @@ eth.getCompilers();
 ///list accounts
 personal.listAccounts;
 personal.newAccount('Aingzy1234');
+personal.unlockAccount(eth.accounts[0],'Aingzy1234');
 personal.newAccount('PrivateTest1234'); //account address: 0xf976EE6cFF5E0dFFe39Ad3a39cD45EB0e15D80f6, wallet address : 0x479E8f2F015292a36F8cd6671ABaf5Eca0811207
 
 //node2 account
