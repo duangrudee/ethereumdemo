@@ -20,10 +20,10 @@
   "scripts": {
     "postinstall": "bower install",
 
-    "prestart": "npm install",
+    "prestart": "browserify ./app/services.js -o ./app/services_c.js",
     "start": "http-server -a localhost -p 1239 -c-1 ./app",
 
-    "pretest": "browserify ./app/services.js -o ./app/services_c.js ",
+    "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js --single-run",
 

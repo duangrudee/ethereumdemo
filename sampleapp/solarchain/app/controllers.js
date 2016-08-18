@@ -1,6 +1,7 @@
 angular.module('solarchain.controllers', []).
 
-    controller('solarchainController', ['$scope', 'ContractConfig', 'Web3Service', function($scope, ContractConfig, web3) {
+    controller('solarchainController', ['$scope',  'ContractConfig', 'Web3Service', 'SolidityCoderService',
+     function($scope,ContractConfig, web3, solcCoder) {
         console.log('Active account = ' + web3.eth.accounts[0]);
         var account = web3.eth.accounts[0];
         var filter = web3.eth.filter('latest');
@@ -8,6 +9,8 @@ angular.module('solarchain.controllers', []).
         var contract = web3.eth.contract(ContractConfig.ApolloTrade.abi).at(contractAddress);   
         var functionHashes = getFunctionHashes(ContractConfig.ApolloTrade.abi);
         
+        $scope.transactions = [];
+
         $scope.buyEnergy = function() {
             $scope.result = "";
 
@@ -28,31 +31,33 @@ angular.module('solarchain.controllers', []).
                     
         }
 
-        setInterval(function() {
-                // Account balance in Ether
-                var balanceWei = web3.eth.getBalance(account).toNumber();
-                var balance = web3.fromWei(balanceWei, 'ether');
-                $scope.currenteth = balance;
-                //console.log("Current ETH = " + $scope.currenteth);
+         setInterval(function () {
+                $scope.$apply( function () {             
+                    // Account balance in Ether
+                    var balanceWei = web3.eth.getBalance(account).toNumber();
+                    var balance = web3.fromWei(balanceWei, 'ether');
+                    $scope.currenteth = balance;
+                    //console.log("Current ETH = " + $scope.currenteth);
 
-                // Block number
-                var number = web3.eth.blockNumber;
-                if ($scope.blocknum != number)
-                    $scope.blocknum = number;
-                //console.log("Current blocknum = " + $scope.blocknum);
+                    // Block number
+                    var number = web3.eth.blockNumber;
+                    if ($scope.blocknum != number)
+                        $scope.blocknum = number;
+                    //console.log("Current blocknum = " + $scope.blocknum);
 
-                // Contract coin balance: call (not state changing)
-                var coinBalance = contract.getCoinAccount.call();
-                $scope.coinBalance = coinBalance;
-                //console.log("Current coinBalance = " + $scope.coinBalance);
+                    // Contract coin balance: call (not state changing)                    
+                    var coinBalance = contract.coinAccount(account, {from: account});
+                    $scope.coinBalance = coinBalance;
+                    //console.log("Current coinBalance = " + $scope.coinBalance);
 
-                // Contract energy balance: call (not state changing)
-                var energyBalance = contract.getEnergyAccount.call();
-                $scope.energyBalance = energyBalance;
-               // console.log("Current energyBalance = " + $scope.energyBalance);
-                $scope.$apply();
-
+                    // Contract energy balance: call (not state changing)                    
+                    var energyBalance = contract.energyAccount(account, { from : account});
+                    $scope.energyBalance = energyBalance;
+                    // console.log("Current energyBalance = " + $scope.energyBalance);
+                });
+             
         }, 1000);
+  
 
   
          
@@ -78,16 +83,16 @@ angular.module('solarchain.controllers', []).
 
                 if (func == 'sellEnergy') {
                         // This is the sellEnergy() method
-                        var inputData = SolidityCoder.decodeParams(["uint256"], t.input.substring(10));
+                        var inputData = solcCoder.decodeParams(["uint256"], t.input.substring(10));
                         console.dir(inputData);
-                        $scope.transactions.push({blockNumber : t.blockNumber, from: sender, to : 'ApolloTrade', transaction : 'sellEnergy(' + inputData[0].toString() });
+                        $scope.transactions.push({blockNumber : t.blockNumber, from: sender, to : 'ApolloTrade', transaction : 'sellEnergy(' + inputData[0].toString() + ')'});
                         
                 } else if (func == 'buyEnergy') {
                         // This is the buyEnergy() method
-                        var inputData = SolidityCoder.decodeParams(["uint256"], t.input.substring(10));
+                        var inputData = solcCoder.decodeParams(["uint256"], t.input.substring(10));
                         console.dir(inputData);
 
-                        $scope.transactions.push({blockNumber : t.blockNumber, from: sender, to : 'ApolloTrade', transaction : 'buyEnergy(' + inputData[0].toString() });                    
+                        $scope.transactions.push({blockNumber : t.blockNumber, to: sender, from : 'ApolloTrade', transaction : 'buyEnergy(' + inputData[0].toString() + ')'});                    
                 } else {
                         // Default log
                         $scope.transactions.push({blockNumber : t.blockNumber, from :  t.to , transaction : t.input });                          
@@ -96,7 +101,10 @@ angular.module('solarchain.controllers', []).
                 $scope.$apply();
             }
             });
-
+            
+function safeApply(scope, fn) {
+    (scope.$$phase || scope.$root.$$phase) ? fn() : scope.$apply(fn);
+}
 
 function getFunctionHashes(abi) {
   var hashes = [];
