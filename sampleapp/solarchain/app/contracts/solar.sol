@@ -3,7 +3,8 @@ contract ApolloTrade {
     mapping (address => uint) energyAccount;
     mapping (address => uint) coinAccount;
     address public owner;
-    
+    uint public totalEnergy = 0;
+
     function ApolloTrade() {
         owner = msg.sender;
     }

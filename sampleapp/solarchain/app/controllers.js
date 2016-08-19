@@ -1,7 +1,6 @@
 angular.module('solarchain.controllers', []).
-
-    controller('solarchainController', ['$scope',  'ContractConfig', 'Web3Service', 'SolidityCoderService', 'EthTxService' , 'lodashService', 'keythereumService', 'SolidityFunctionService',
-     function($scope, ContractConfig, web3, solcCoder, ethTx, _ , keythereum, solidityFunction) {
+    controller('solarchainController', ['$scope', 'ContractConfig', 'Web3Service', 'SolidityCoderService', //'EthTxService' , 'lodashService', 'keythereumService', 'SolidityFunctionService',
+     function($scope, ContractConfig, web3, solcCoder) { //, ethTx, _ , keythereum, solidityFunction) {
         console.log('Active account = ' + web3.eth.accounts[0]);
         var account = web3.eth.accounts[0];
         var filter = web3.eth.filter('latest');
@@ -17,7 +16,6 @@ angular.module('solarchain.controllers', []).
             console.log("Buy Amount : " + $scope.buyAmount);
             contract.buyEnergy( $scope.buyAmount, {from: account});     
             console.log(ContractConfig.ApolloTrade.abi);            
-                    
         }
 
         $scope.sellEnergy = function() {
@@ -25,35 +23,34 @@ angular.module('solarchain.controllers', []).
 
             console.log("Sell Amount : " + $scope.sellEnergyAmount);
             contract.sellEnergy( $scope.sellEnergyAmount, {from: account});
-     
-
             console.log(ContractConfig.ApolloTrade.abi);            
-                    
         }
 
         setInterval(function () {
                 $scope.$apply( function () {             
                     // Account balance in Ether
-                    var balanceWei = web3.eth.getBalance(account).toNumber();
-                    var balance = web3.fromWei(balanceWei, 'ether');
-                    $scope.currenteth = balance;
+                    // var balanceWei = web3.eth.getBalance(account).toNumber();
+                    // var balance = web3.fromWei(balanceWei, 'ether');
+                    // $scope.currenteth = balance;
                     //console.log("Current ETH = " + $scope.currenteth);
 
                     // Block number
-                    var number = web3.eth.blockNumber;
-                    if ($scope.blocknum != number)
-                        $scope.blocknum = number;
+                    // var number = web3.eth.blockNumber;
+                    // if ($scope.blocknum != number)
+                    //     $scope.blocknum = number;
                     //console.log("Current blocknum = " + $scope.blocknum);
 
                     // Contract coin balance: call (not state changing)                    
-                    var coinBalance = contract.coinAccount(account, {from: account});
-                    $scope.coinBalance = coinBalance;
+                    contract.getCoinAccount({from: account}, (error, result) => 
+                        $scope.coinBalance = result);
                     //console.log("Current coinBalance = " + $scope.coinBalance);
 
                     // Contract energy balance: call (not state changing)                    
-                    var energyBalance = contract.energyAccount(account, { from : account});
-                    $scope.energyBalance = energyBalance;
+                    contract.getEnergyAccount({from: account}, (error, result) => 
+                        $scope.energyBalance = result);
                     // console.log("Current energyBalance = " + $scope.energyBalance);
+
+                    $scope.villageTotalEnergy = contract.totalEnergy();
                 });
              
         }, 1000);
@@ -97,157 +94,157 @@ angular.module('solarchain.controllers', []).
             });
             
 
-            function sendTransaction(funcName, contractABI, toAccount, fromAccount) {          
-                // This is what you get from keythereum when generating a new private key:
-                var dk = {
-                    "dk": {
-                        "privateKey": {
-                            "type": "Buffer",
-                            "data": [
-                                251,
-                                130,
-                                130,
-                                184,
-                                46,
-                                69,
-                                62,
-                                86,
-                                16,
-                                1,
-                                166,
-                                96,
-                                184,
-                                89,
-                                54,
-                                191,
-                                54,
-                                119,
-                                213,
-                                251,
-                                162,
-                                8,
-                                241,
-                                40,
-                                200,
-                                21,
-                                82,
-                                232,
-                                200,
-                                137,
-                                251,
-                                135
-                            ]
-                        },
-                        "iv": {
-                            "type": "Buffer",
-                            "data": [
-                                214,
-                                200,
-                                194,
-                                220,
-                                251,
-                                16,
-                                12,
-                                200,
-                                144,
-                                160,
-                                41,
-                                133,
-                                200,
-                                56,
-                                39,
-                                198
-                            ]
-                        },
-                        "salt": {
-                            "type": "Buffer",
-                            "data": [
-                                2,
-                                2,
-                                82,
-                                45,
-                                73,
-                                187,
-                                119,
-                                171,
-                                227,
-                                87,
-                                73,
-                                56,
-                                48,
-                                187,
-                                180,
-                                207,
-                                156,
-                                112,
-                                187,
-                                205,
-                                194,
-                                99,
-                                48,
-                                150,
-                                249,
-                                210,
-                                117,
-                                187,
-                                193,
-                                153,
-                                4,
-                                137
-                            ]
-                        }
-                    }
-                };
+            // function sendTransaction(funcName, contractABI, toAccount, fromAccount) {          
+            //     // This is what you get from keythereum when generating a new private key:
+            //     var dk = {
+            //         "dk": {
+            //             "privateKey": {
+            //                 "type": "Buffer",
+            //                 "data": [
+            //                     251,
+            //                     130,
+            //                     130,
+            //                     184,
+            //                     46,
+            //                     69,
+            //                     62,
+            //                     86,
+            //                     16,
+            //                     1,
+            //                     166,
+            //                     96,
+            //                     184,
+            //                     89,
+            //                     54,
+            //                     191,
+            //                     54,
+            //                     119,
+            //                     213,
+            //                     251,
+            //                     162,
+            //                     8,
+            //                     241,
+            //                     40,
+            //                     200,
+            //                     21,
+            //                     82,
+            //                     232,
+            //                     200,
+            //                     137,
+            //                     251,
+            //                     135
+            //                 ]
+            //             },
+            //             "iv": {
+            //                 "type": "Buffer",
+            //                 "data": [
+            //                     214,
+            //                     200,
+            //                     194,
+            //                     220,
+            //                     251,
+            //                     16,
+            //                     12,
+            //                     200,
+            //                     144,
+            //                     160,
+            //                     41,
+            //                     133,
+            //                     200,
+            //                     56,
+            //                     39,
+            //                     198
+            //                 ]
+            //             },
+            //             "salt": {
+            //                 "type": "Buffer",
+            //                 "data": [
+            //                     2,
+            //                     2,
+            //                     82,
+            //                     45,
+            //                     73,
+            //                     187,
+            //                     119,
+            //                     171,
+            //                     227,
+            //                     87,
+            //                     73,
+            //                     56,
+            //                     48,
+            //                     187,
+            //                     180,
+            //                     207,
+            //                     156,
+            //                     112,
+            //                     187,
+            //                     205,
+            //                     194,
+            //                     99,
+            //                     48,
+            //                     150,
+            //                     249,
+            //                     210,
+            //                     117,
+            //                     187,
+            //                     193,
+            //                     153,
+            //                     4,
+            //                     137
+            //                 ]
+            //             }
+            //         }
+            //     };
 
-                var privateKey = new Buffer(dk.dk.privateKey.data);
-                console.log('privateKey');
-                console.log(privateKey);
+            //     var privateKey = new Buffer(dk.dk.privateKey.data);
+            //     console.log('privateKey');
+            //     console.log(privateKey);
 
-                // Step 2:
-                var solidityFunction = new SolidityFunction('', _.find(contractABI, { name: funcName }), '');
-                console.log('This shows what toPayload expects as an object');
-                console.log(solidityFunction)
+            //     // Step 2:
+            //     var solidityFunction = new SolidityFunction('', _.find(contractABI, { name: funcName }), '');
+            //     console.log('This shows what toPayload expects as an object');
+            //     console.log(solidityFunction)
 
-                // Step 3:
-                var payloadData = solidityFunction.toPayload([toAccount, 3]).data;
+            //     // Step 3:
+            //     var payloadData = solidityFunction.toPayload([toAccount, 3]).data;
 
-                // Step 4:
-                gasPrice = web3.eth.gasPrice;
-                gasPriceHex = web3.toHex(gasPrice);
-                gasLimitHex = web3.toHex(300000);
-                console.log('Current gasPrice: ' + gasPrice + ' OR ' + gasPriceHex);
+            //     // Step 4:
+            //     gasPrice = web3.eth.gasPrice;
+            //     gasPriceHex = web3.toHex(gasPrice);
+            //     gasLimitHex = web3.toHex(300000);
+            //     console.log('Current gasPrice: ' + gasPrice + ' OR ' + gasPriceHex);
 
-                nonce =  web3.eth.getTransactionCount(fromAccount) ;
-                nonceHex = web3.toHex(nonce);
-                console.log('nonce (transaction count on fromAccount): ' + nonce + '(' + nonceHex + ')');
+            //     nonce =  web3.eth.getTransactionCount(fromAccount) ;
+            //     nonceHex = web3.toHex(nonce);
+            //     console.log('nonce (transaction count on fromAccount): ' + nonce + '(' + nonceHex + ')');
 
-                var rawTx = {
-                    nonce: nonceHex,
-                    gasPrice: gasPriceHex,
-                    gasLimit: gasLimitHex,
-                    to: walletContractAddress,
-                    from: fromAccount,
-                    value: '0x00',
-                    data: payloadData
-                };
+            //     var rawTx = {
+            //         nonce: nonceHex,
+            //         gasPrice: gasPriceHex,
+            //         gasLimit: gasLimitHex,
+            //         to: walletContractAddress,
+            //         from: fromAccount,
+            //         value: '0x00',
+            //         data: payloadData
+            //     };
 
-                // Step 5:
-                var tx = new Tx(rawTx);
-                tx.sign(privateKey);
+            //     // Step 5:
+            //     var tx = new Tx(rawTx);
+            //     tx.sign(privateKey);
 
-                var serializedTx = tx.serialize();
+            //     var serializedTx = tx.serialize();
 
-                web3.eth.sendRawTransaction(serializedTx.toString('hex'), function (err, hash) {
-                    if (err) {
-                        console.log('Error:');
-                        console.log(err);
-                    }
-                    else {
-                        console.log('Transaction receipt hash pending');
-                        console.log(hash);
-                    }
-                });
-            }
+            //     web3.eth.sendRawTransaction(serializedTx.toString('hex'), function (err, hash) {
+            //         if (err) {
+            //             console.log('Error:');
+            //             console.log(err);
+            //         }
+            //         else {
+            //             console.log('Transaction receipt hash pending');
+            //             console.log(hash);
+            //         }
+            //     });
+            // }
 
             function getFunctionHashes(abi) {
                 var hashes = [];
