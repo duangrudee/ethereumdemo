@@ -15,13 +15,26 @@ angular.module('solarchain.services', [])
   .factory('lodashService', function () {
         return require('lodash');;
   })
-  .factory('keythereumService', function() {
-      return  require("keythereum");
-  })
   .factory('SolidityFunctionService', function(){
       return require('web3/lib/web3/function');
   })
   
+  .factory('keythereumService', function() {
+      var keythereum=  require("keythereum");
+      var authAPI = {};
+      var dumpKeyObject = null;
+      
+      authAPI.dumpPrivateKey = function (password) {
+            keythereum.dump(password, dk.privateKey, dk.salt, dk.iv, function (keyObject) {
+                  // do stuff!
+                  console.log(keyObject);
+                  dumpKeyObject = keyObject;
+                  keythereum.exportToFile(keyObject); //export to keystore sub-dir
+            });            
+      }    
+
+      return authAPI;
+  }) 
   ;
   
   

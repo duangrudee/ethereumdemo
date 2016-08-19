@@ -1,6 +1,7 @@
 angular.module('solarchain.controllers', []).
 
-    controller('solarchainController', ['$scope',  'ContractConfig', 'Web3Service', 'SolidityCoderService', 'EthTxService' , 'lodashService', 'keythereumService', 'SolidityFunctionService',
+    controller('solarchainController', ['$scope',  'ContractConfig', 'Web3Service', 
+                                        'SolidityCoderService', 'EthTxService' , 'lodashService',  'SolidityFunctionService',
      function($scope, ContractConfig, web3, solcCoder, ethTx, _ , keythereum, solidityFunction) {
         console.log('Active account = ' + web3.eth.accounts[0]);
         var account = web3.eth.accounts[0];
