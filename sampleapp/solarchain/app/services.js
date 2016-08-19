@@ -20,7 +20,9 @@ angular.module('solarchain.services', [])
   })
   .factory('SolidityFunctionService', function(){
       return require('web3/lib/web3/function');
-  });
+  })
+  
+  ;
   
   
   

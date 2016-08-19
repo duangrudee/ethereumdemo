@@ -1,7 +1,7 @@
 contract ApolloTrade {
     uint public kWh_rate = 1000;
-    mapping (address => uint) energyAccount;
-    mapping (address => uint) coinAccount;
+    mapping (address => uint) public energyAccount;
+    mapping (address => uint) public coinAccount;
     address public owner;
     
     function ApolloTrade() {
@@ -29,12 +29,5 @@ contract ApolloTrade {
             energyAccount[msg.sender] += (coin / kWh_rate);
         }
     }
-    
-    function getEnergyAccount() returns (uint kwh) {
-        return energyAccount[msg.sender];
-    }
 
-    function getCoinAccount() returns (uint coin) {
-        return coinAccount[msg.sender];
-    }
 }
