@@ -1,0 +1,16 @@
+sampleapp/solarchain/node_modules/*
+sampleapp/solarchain/app/bower_components/*
+sampleapp/solarchain/app/services_c.js
+sampleapp/greeter/node_modules/*
+sampleapp/greeter/app/bower_components/*
+sampleapp/greeter/app/services_c.js
+PrivateBlockSetup/privateblock/chaindata/*
+PrivateBlockSetup/privateblock/dapp/*
+PrivateBlockSetup/privateblock/keystore/*
+PrivateBlockSetup/privateblock/history
+PrivateBlockSetup/privateblock/nodekey
+PrivateBlockSetup/privatenode2/chaindata/*
+PrivateBlockSetup/privatenode2/dapp/*
+PrivateBlockSetup/privatenode2/keystore/*
+PrivateBlockSetup/privatenode2/history
+PrivateBlockSetup/privatenode2/nodekey
