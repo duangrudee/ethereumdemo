@@ -3,7 +3,13 @@ contract ApolloTrade {
     mapping (address => uint) energyAccount;
     mapping (address => uint) coinAccount;
     address public owner;
-    uint public totalEnergy = 0;
+    uint public totalEnergy = 100;
+
+    event InsufficientEnergy(uint, uint);
+    event InsufficientCoin(uint, uint);
+    event InitialEnergySet(address, uint);
+    event EnergyBought(address, uint);
+    event EnergySold(address, uint);
 
     function ApolloTrade() {
         owner = msg.sender;
@@ -20,22 +26,47 @@ contract ApolloTrade {
 
     // I am selling some energy; this will credit my account
     function sellEnergy(uint kwh) public {
+        if (energyAccount[msg.sender] < kwh) {
+            InsufficientEnergy(energyAccount[msg.sender], kwh);             
+            throw;
+        }
+
         coinAccount[msg.sender] += (kwh * kWh_rate);
+        energyAccount[msg.sender] -= kwh;
+        totalEnergy += kwh;
+
+        EnergySold(msg.sender, kwh);
     }
 
     // I am buying some energy, thus crediting my energy account
     function buyEnergy(uint coin) {
-        if (coinAccount[msg.sender] > coin) {
-            coinAccount[msg.sender] -= coin;
-            energyAccount[msg.sender] += (coin / kWh_rate);
+        if (coinAccount[msg.sender] < coin){
+            InsufficientCoin(coinAccount[msg.sender], coin);
+            throw;
         }
+        var kwh = (coin / kWh_rate);
+        if (totalEnergy < kwh) {
+            InsufficientEnergy(totalEnergy, kwh); 
+            throw;
+        }
+
+        coinAccount[msg.sender] -= coin;
+        energyAccount[msg.sender] += kwh;
+        totalEnergy -= kwh;
+
+        EnergyBought(msg.sender, kwh);
     }
     
-    function getEnergyAccount() returns (uint kwh) {
+    function getEnergyAccount() constant returns (uint kwh) {
         return energyAccount[msg.sender];
     }
 
-    function getCoinAccount() returns (uint coin) {
+    function getCoinAccount() constant returns (uint coin) {
         return coinAccount[msg.sender];
+    }
+
+    function setInitialEnergyInMemberPowerBank(address account, uint initialKwh) onlyOwner {
+        energyAccount[account] = initialKwh;
+        InitialEnergySet(account, initialKwh);
     }
 }
