@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
   <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
   <!-- Bootstrap core CSS -->
   <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -26,7 +27,7 @@
    <div class="container-fluid">
       <div class="row">
         <div>
-          <h1 class="page-header">SolarChain Dashboard</h1>
+          <h1 class="page-header">Your Home Solar Energy Dashboard</h1>
             <div class="panel panel-default">
               <div class="panel-body">
                 <div class="row placeholders">
@@ -66,23 +67,21 @@
 
       <div class="row">
         <div>
-          <h2 class="sub-header">Transactions</h2>
+          <h2 class="sub-header">Energy Transfer History</h2>
           <div class="table-responsive">
             <table  class="table table-striped">
               <thead>
                 <tr>
-                  <th>block#</th>
-                  <th>from</th>
-                  <th>to</th>
-                  <th>input</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Amount (kWh)</th>
                 </tr>
               </thead>
               <tbody id="transactions">
                  <tr ng-repeat="tx in transactions">
-                  <td>{{tx.blockNumber}}</td>
                   <td>{{tx.from}}</td>
                   <td>{{tx.to}}</td>
-                  <td>{{tx.transaction}}</td>
+                  <td>{{tx.amount}}</td>
                 </tr>
               </tbody>
             </table>
@@ -94,6 +93,7 @@
 
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="./app.js"></script>
   <script src="./contracts/solar.js"></script>
   <script src="./controllers.js"></script>
@@ -101,5 +101,6 @@
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
+  <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
 </body>
 </html>

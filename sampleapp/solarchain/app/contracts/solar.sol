@@ -39,14 +39,14 @@ contract ApolloTrade {
     }
 
     // I am buying some energy, thus crediting my energy account
-    function buyEnergy(uint coin) {
-        if (coinAccount[msg.sender] < coin){
-            InsufficientCoin(coinAccount[msg.sender], coin);
-            throw;
-        }
-        var kwh = (coin / kWh_rate);
+    function buyEnergy(uint kwh) {
         if (totalEnergy < kwh) {
             InsufficientEnergy(totalEnergy, kwh); 
+            throw;
+        }
+        var coin = (kwh * kWh_rate);
+        if (coinAccount[msg.sender] < coin){
+            InsufficientCoin(coinAccount[msg.sender], coin);
             throw;
         }
 

@@ -1,6 +1,6 @@
-angular.module('solarchain.controllers', []).
-    controller('solarchainController', ['$scope', 'ContractConfig', 'Web3Service', 'SolidityCoderService', //'EthTxService' , 'lodashService', 'keythereumService', 'SolidityFunctionService',
-     function($scope, ContractConfig, web3, solcCoder) { //, ethTx, _ , keythereum, solidityFunction) {
+angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
+    controller('solarchainController', ['$scope', 'toastr', 'ContractConfig', 'Web3Service', 'SolidityCoderService', //'EthTxService' , 'lodashService', 'keythereumService', 'SolidityFunctionService',
+     function($scope, toastr, ContractConfig, web3, solcCoder) { //, ethTx, _ , keythereum, solidityFunction) {
         console.log('Active account = ' + web3.eth.accounts[0]);
         var account = web3.eth.accounts[0];
         var filter = web3.eth.filter('latest');
@@ -15,7 +15,8 @@ angular.module('solarchain.controllers', []).
 
             console.log("Buy Amount : " + $scope.buyAmount);
             contract.buyEnergy( $scope.buyAmount, {from: account});     
-            console.log(ContractConfig.ApolloTrade.abi);            
+            console.log(ContractConfig.ApolloTrade.abi);     
+            toastr.success("Buying transaction has been created. Please wait until it has been executed shortly");       
         }
 
         $scope.sellEnergy = function() {
@@ -23,12 +24,28 @@ angular.module('solarchain.controllers', []).
 
             console.log("Sell Amount : " + $scope.sellEnergyAmount);
             contract.sellEnergy( $scope.sellEnergyAmount, {from: account});
-            console.log(ContractConfig.ApolloTrade.abi);            
+            console.log(ContractConfig.ApolloTrade.abi);
+            toastr.success("Selling transaction has been created. Please wait until it has been executed shortly");       
         }
 
-        contract.EnergyBought((err, data) => $scope.$apply(updateAccount));
-        contract.EnergySold((err, data) => $scope.$apply(updateAccount));
-        contract.InitialEnergySet((err, data) => $scope.$apply(updateAccount));
+        contract.InsufficientEnergy((err, data) => {
+            toastr.error("Insufficient energy, the transaction has been cancelled");
+        });
+        contract.InsufficientCoin((err, data) => {
+            toastr.error("Insufficient coin, the transaction has been cancelled");
+        });
+        contract.EnergyBought((err, data) => {
+            $scope.$apply(updateAccount);
+            toastr.success("Energy bought!");
+        });
+        contract.EnergySold((err, data) => {
+            $scope.$apply(updateAccount);
+            toastr.success("Energy sold!");
+        });
+        contract.InitialEnergySet((err, data) => {
+            $scope.$apply(updateAccount);
+            toastr.success("Initial energy has been set!");
+        });
         
         filter.watch(function(error, result){
             if (error) {
@@ -44,23 +61,20 @@ angular.module('solarchain.controllers', []).
                 var t = block.transactions[index];
 
                 // Decode from
-                var sender = t.from==account ? "me" : t.from;
+                var sender = t.from==account ? "Me" : t.from;
 
                 // Decode function
                 var func = findFunctionByHash(functionHashes, t.input);
                 if (func == 'sellEnergy') {
-                        // This is the sellEnergy() method
-                        var inputData = solcCoder.decodeParams(["uint256"], t.input.substring(10));
-                        console.dir(inputData);
-                        $scope.transactions.push({blockNumber : t.blockNumber, from: sender, to : 'ApolloTrade', transaction : 'sellEnergy(' + inputData[0].toString() + ')'});
+                    // This is the sellEnergy() method
+                    var inputData = solcCoder.decodeParams(["uint256"], t.input.substring(10));
+                    console.dir(inputData);
+                    $scope.transactions.push({ from: sender, to: 'The village energy pool',  amount : inputData[0].toString() });
                 } else if (func == 'buyEnergy') {
-                        // This is the buyEnergy() method
-                        var inputData = solcCoder.decodeParams(["uint256"], t.input.substring(10));
-                        console.dir(inputData);
-                        $scope.transactions.push({blockNumber : t.blockNumber, to: sender, from : 'ApolloTrade', transaction : 'buyEnergy(' + inputData[0].toString() + ')'});                    
-                } else {
-                        // Default log
-                        //$scope.transactions.push({blockNumber : t.blockNumber, from :  t.to , transaction : t.input });                          
+                    // This is the buyEnergy() method
+                    var inputData = solcCoder.decodeParams(["uint256"], t.input.substring(10));
+                    console.dir(inputData);
+                    $scope.transactions.push({ to: sender, from: 'The village energy pool',  amount : inputData[0].toString() });                    
                 }
 
                 $scope.$apply();
