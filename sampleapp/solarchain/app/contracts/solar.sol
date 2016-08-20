@@ -69,4 +69,12 @@ contract ApolloTrade {
         energyAccount[account] = initialKwh;
         InitialEnergySet(account, initialKwh);
     }
+
+    function getEnergyAccountForAdmin(address account) constant onlyOwner returns (uint kwh)  {
+        return energyAccount[account];
+    }
+
+    function getCoinAccountForAdmin(address account) constant onlyOwner returns (uint coin)  {
+        return coinAccount[account];
+    }
 }
