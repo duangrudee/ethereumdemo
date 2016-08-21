@@ -14,7 +14,7 @@
     "bootstrap": "^3.3.6",
     "web3": "^0.16.0",
     "jquery-ui": "^1.11.4",
-    "angular-toastr": "^2.0.0",
+    "angular-toastr": "~2.0.0",
     "angular-animate": "^1.5.8"
   }
 }
