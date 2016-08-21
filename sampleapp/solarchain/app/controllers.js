@@ -9,12 +9,12 @@ angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
         var functionHashes = getFunctionHashes(ContractConfig.ApolloTrade.abi);
         updateAccount();        
         $scope.transactions = [];
-        $scope.energyPrice = contract.kWh_rate().toNumber();
-
+        $scope.buyAmount = $scope.sellAmount = 0;
+        
         $scope.buyEnergy = function() {
             // I can't really find a way to detect insufficient coin/energy from the contract's funcion call itself.
             var coinNeeded = $scope.buyAmount * contract.kWh_rate();
-            if (coinNeeded > $scope.coinBalance) {
+            if (coinNeeded > contract.getCoinAccount({from: account}).toNumber()) {
                 toastr.error("Insufficient coin");
                 return;
             }
@@ -24,25 +24,50 @@ angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
                 return;
             }
 
-            $scope.result = "";
-            console.log("Buy Amount : " + $scope.buyAmount);
             contract.buyEnergy( $scope.buyAmount, {from: account});     
-            console.log(ContractConfig.ApolloTrade.abi);     
-            toastr.success("Buying transaction has been created. Please wait until it has been executed shortly");       
-        }
+            toastr.success("Buying transaction has been created. Please wait until it has been executed shortly");
+            $scope.buyAmount = 0;
+            updateAccount();
+        };
 
         $scope.sellEnergy = function() {
-            if ($scope.sellEnergyAmount > $scope.energyBalance) {
+            if ($scope.sellAmount > contract.getEnergyAccount({from: account}).toNumber()) {
                 toastr.error("Insufficient energy for sale");
                 return;
             }
             
-            $scope.result = "";
-            console.log("Sell Amount : " + $scope.sellEnergyAmount);
-            contract.sellEnergy( $scope.sellEnergyAmount, {from: account});
-            console.log(ContractConfig.ApolloTrade.abi);
-            toastr.success("Selling transaction has been created. Please wait until it has been executed shortly");       
-        }
+            contract.sellEnergy( $scope.sellAmount, {from: account});
+            toastr.success("Selling transaction has been created. Please wait until it has been executed shortly");
+            $scope.sellAmount = 0;
+            updateAccount();
+        };
+
+        $scope.sellAmountChanged = () => {
+            updateAccount();
+            $scope.buyAmount = 0;
+            
+            if ($scope.sellAmount < 0) $scope.sellAmount = 0;
+            if ($scope.sellAmount > $scope.energyBalance) $scope.sellAmount = $scope.energyBalance
+
+            uiUpdateEnergyBalance($scope.energyBalance - $scope.sellAmount);
+            uiUpdateVillageTotalEnergy($scope.villageTotalEnergy + $scope.sellAmount);
+            uiUpdateCoin($scope.coinBalance + ($scope.sellAmount * $scope.energyPrice));
+        };
+
+        $scope.buyAmountChanged = () => {
+            updateAccount();
+            $scope.sellAmount = 0;
+
+            if ($scope.buyAmount < 0) $scope.buyAmount = 0;
+            if ($scope.buyAmount > $scope.villageTotalEnergy || 
+                $scope.buyAmount * $scope.energyPrice > $scope.coinBalance) {
+                $scope.buyAmount = Math.min($scope.villageTotalEnergy, $scope.coinBalance / $scope.energyPrice)
+            }
+
+            uiUpdateEnergyBalance($scope.energyBalance + $scope.buyAmount);
+            uiUpdateVillageTotalEnergy($scope.villageTotalEnergy - $scope.buyAmount);
+            uiUpdateCoin($scope.coinBalance - ($scope.buyAmount * $scope.energyPrice));
+        };
 
         contract.InsufficientEnergy((err, data) => {
             toastr.error("Insufficient energy, the transaction has been cancelled");
@@ -96,12 +121,6 @@ angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
                 $scope.$apply();
             }
         });
-        
-        function updateAccount() {
-            $scope.coinBalance = contract.getCoinAccount({from: account}).toNumber();
-            $scope.energyBalance = contract.getEnergyAccount({from: account}).toNumber();
-            $scope.villageTotalEnergy = contract.totalEnergy().toNumber();
-        }
 
         function getFunctionHashes(abi) {
             var hashes = [];
@@ -122,5 +141,37 @@ angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
                 return hashes[i].name;
             }
             return null;
+        }
+
+        function updateAccount() {
+            $scope.villageTotalEnergyUp = 
+            $scope.villageTotalEnergyDown = 
+            $scope.coinBalanceUp = 
+            $scope.coinBalanceDown = 
+            $scope.energyBalanceUp = 
+            $scope.energyBalanceDown = false;
+
+            $scope.energyPrice = contract.kWh_rate().toNumber();
+            $scope.coinBalance = contract.getCoinAccount({from: account}).toNumber();
+            $scope.energyBalance = contract.getEnergyAccount({from: account}).toNumber();
+            $scope.villageTotalEnergy = contract.totalEnergy().toNumber();
+        }
+
+        function uiUpdateVillageTotalEnergy(newValue) {
+            $scope.villageTotalEnergyUp = newValue > $scope.villageTotalEnergy;
+            $scope.villageTotalEnergyDown = newValue < $scope.villageTotalEnergy;
+            $scope.villageTotalEnergy = newValue;
+        }
+
+        function uiUpdateCoin(newValue) {
+            $scope.coinBalanceUp = newValue > $scope.coinBalance;
+            $scope.coinBalanceDown = newValue < $scope.coinBalance;
+            $scope.coinBalance = newValue;
+        }
+
+        function uiUpdateEnergyBalance(newValue) {
+            $scope.energyBalanceUp = newValue > $scope.energyBalance;
+            $scope.energyBalanceDown = newValue < $scope.energyBalance;
+            $scope.energyBalance = newValue;
         }
     }]);

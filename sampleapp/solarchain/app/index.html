@@ -60,19 +60,33 @@
       </header>
       <div class="content-max-width">
         <div class="fact-box">
-          <div class="number-part" ng-bind="villageTotalEnergy | number:0"></div>
+          <div class="amers">
+            <span ng-class="{'icon-arrow-up': villageTotalEnergyUp, 'icon-arrow-down': villageTotalEnergyDown}"></span>
+            <span ng-class="{'pos': villageTotalEnergyUp, 'neg': villageTotalEnergyDown}" 
+              class="number-part" ng-bind="villageTotalEnergy | number:0"></span>
+          </div>
           <div>Village Total Energy (kWh)</div>
         </div>
         <div class="fact-box">
-          <div class="number-part" ng-bind="energyPrice | number:0"></div>
+          <div class="amers">
+            <span class="number-part" ng-bind="energyPrice | number:0"></span>
+          </div>
           <div>Energy Price (Coin/kWh)</div>
         </div>
         <div class="fact-box">
-          <div class="number-part" ng-bind="coinBalance | number:0"></div>
+          <div class="amers">
+            <span ng-class="{'icon-arrow-up': coinBalanceUp, 'icon-arrow-down': coinBalanceDown}"></span>
+            <span ng-class="{'pos': coinBalanceUp, 'neg': coinBalanceDown}" 
+              class="number-part" ng-bind="coinBalance | number:0"></span>
+          </div>
           <div>My Coins</div>
         </div>
         <div class="fact-box">
-          <div class="number-part" ng-bind="energyBalance | number:0"></div>
+          <div class="amers">
+            <span ng-class="{'icon-arrow-up': energyBalanceUp, 'icon-arrow-down': energyBalanceDown}"></span>
+            <span ng-class="{'pos': energyBalanceUp, 'neg': energyBalanceDown}" 
+              class="number-part" ng-bind="energyBalance | number:0"></span>
+          </div>
           <div>My Power Bank (kWh)</div>
         </div>
       </div>
@@ -88,15 +102,9 @@
       <div class="content">
         <div>
           <label for="sell">Amount (kWh):</label>
-          <input type="number" class="form-control" id="sell" ng-model="sellEnergyAmount" placeholder="0">
-          <button ng-click="sellEnergy()">Sell</button>
+          <input class="large-style" type="number" id="sell" ng-model="sellAmount" ng-change="sellAmountChanged()">
+          <button class="large-style" ng-click="sellEnergy()">Sell</button>
         </div>
-        <!--<div class="amer">
-          <span class="dnchange" style="padding:10px">Sell Amount: 0</span>
-        </div>
-        <div class="amer">
-          <span class="upchange" style="padding:10px">Coin Received: 0</span>
-        </div>-->
       </div>
       <header class="level2">
         <h6>Buy Energy</h6>
@@ -104,8 +112,8 @@
       <div class="content">
         <div>
           <label for="buy">Amount (kWh):</label>
-          <input type="number" class="form-control" id="buy" ng-model="buyAmount" placeholder="0">
-          <button ng-click="buyEnergy()">Buy</button>
+          <input class="large-style" type="number" id="buy" ng-model="buyAmount" ng-change="buyAmountChanged()">
+          <button class="large-style" ng-click="buyEnergy()">Buy</button>
         </div>
       </div>
     </div>
