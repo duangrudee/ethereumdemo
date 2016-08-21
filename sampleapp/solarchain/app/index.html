@@ -2,109 +2,149 @@
 <!--[if lt IE 7]>      <html lang="en" ng-app="solarchain" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html lang="en" ng-app="solarchain" class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html lang="en" ng-app="solarchain" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="solarchain" class="no-js"> <!--<![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="solarchain" class="no-js">
+<!--<![endif]-->
+
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   <title>Dashboard</title>
+  <title>Dashboard</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
   <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
-  <link rel="stylesheet" href="app.css">
   <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.css" />
+  <link rel="stylesheet" href="webui/css/EikonWebUI.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
-  <!-- Bootstrap core CSS -->
-  <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-   <style>
-      body {
-        padding-left: 50px;
-        padding-right: 50px;
-      }
-    </style>
+  <style>
+    .main-panel {
+      padding-top: 20px;
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+    
+    .content-block .content {
+      padding: 15px 30px;
+      border:
+    }
+    
+    .content-block .content-max-width {
+      padding: 0;
+    }
+    
+    .content-block {
+      border: 1px solid #2e2e33;
+      margin-bottom: 10px;
+    }
+
+    .fact-box {
+      padding: 20px 5px;
+      width: 23%;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .fact-box .number-part {
+      font-size:25px;
+    }
+  </style>
 </head>
+
 <body ng-controller="solarchainController">
-   <div class="container-fluid">
-      <div class="row">
-        <div>
-          <h1 class="page-header">Your Home Solar Energy Dashboard</h1>
-            <div class="panel panel-default">
-              <div class="panel-body">
-                <div class="row placeholders">
-                  <div class="col-sm-3 placeholder">
-                    <h4>Village Total Energy</h4>
-                    <span class="text-muted" ng-bind="villageTotalEnergy"></span>
-                  </div>
-                  <div class="col-sm-3 placeholder">
-                    <h4>Energy Price (Coin/kWh)</h4>
-                    <span class="text-muted" ng-bind="energyPrice"></span>
-                  </div>
-                  <div class="col-sm-3 placeholder">
-                    <h4>My Coins</h4>
-                    <span class="text-muted" ng-bind="coinBalance"></span>
-                  </div>
-                  <div class="col-sm-3 placeholder">
-                    <h4>My Power Bank</h4>
-                    <span class="text-muted" ng-bind="energyBalance"></span>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <div class="main-panel">
+    <h3 align="center">Your Home Solar Energy Dashboard</h3>
+    <div class="content-block">
+      <header class="level1">
+        <h6>Status</h6>
+      </header>
+      <div class="content-max-width">
+        <div class="fact-box">
+          <div class="number-part" ng-bind="villageTotalEnergy | number:0"></div>
+          <div>Village Total Energy (kWh)</div>
         </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <h2 class="sub-header">Operations</h2>            
-              <div class="form-group">
-                <label for="sell">Sell energy:</label>
-                <input type="number" class="form-control" id="sell" ng-model="sellEnergyAmount">
-              </div>
-              <button ng-click="sellEnergy()">Sell</button>              
-              <div class="form-group">
-                <label for="buy">Buy energy:</label>
-                <input type="number" class="form-control" id="buy"  ng-model="buyAmount">
-              </div>
-             <button ng-click="buyEnergy()">Buy</button>            
+        <div class="fact-box">
+          <div class="number-part" ng-bind="energyPrice | number:0"></div>
+          <div>Energy Price (Coin/kWh)</div>
         </div>
-      </div>
-
-      <div class="row">
-        <div>
-          <h2 class="sub-header">Energy Transfer History</h2>
-          <div class="table-responsive">
-            <table  class="table table-striped">
-              <thead>
-                <tr>
-                  <th>From</th>
-                  <th>To</th>
-                  <th>Amount (kWh)</th>
-                </tr>
-              </thead>
-              <tbody id="transactions">
-                 <tr ng-repeat="tx in transactions">
-                  <td>{{tx.from}}</td>
-                  <td>{{tx.to}}</td>
-                  <td>{{tx.amount}}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="fact-box">
+          <div class="number-part" ng-bind="coinBalance | number:0"></div>
+          <div>My Coins</div>
+        </div>
+        <div class="fact-box">
+          <div class="number-part" ng-bind="energyBalance | number:0"></div>
+          <div>My Power Bank (kWh)</div>
         </div>
       </div>
     </div>
 
+    <div class="content-block">
+      <header class="level1">
+        <h6>Energy Transfer</h6>
+      </header>
+      <header class="level2">
+        <h6>Sell Energy</h6>
+      </header>
+      <div class="content">
+        <div>
+          <label for="sell">Amount (kWh):</label>
+          <input type="number" class="form-control" id="sell" ng-model="sellEnergyAmount" placeholder="0">
+          <button ng-click="sellEnergy()">Sell</button>
+        </div>
+        <!--<div class="amer">
+          <span class="dnchange" style="padding:10px">Sell Amount: 0</span>
+        </div>
+        <div class="amer">
+          <span class="upchange" style="padding:10px">Coin Received: 0</span>
+        </div>-->
+      </div>
+      <header class="level2">
+        <h6>Buy Energy</h6>
+      </header>
+      <div class="content">
+        <div>
+          <label for="buy">Amount (kWh):</label>
+          <input type="number" class="form-control" id="buy" ng-model="buyAmount" placeholder="0">
+          <button ng-click="buyEnergy()">Buy</button>
+        </div>
+      </div>
+    </div>
 
+    <div class="content-block">
+      <header class="level1">
+        <h6>Energy Transfer History</h6>
+      </header>
+      <div class="content-max-width">
+        <table class="basic-table links-alt-color">
+          <thead>
+            <tr>
+              <th>From</th>
+              <th>To</th>
+              <th>Amount (kWh)</th>
+            </tr>
+          </thead>
+          <tbody id="transactions">
+            <tr ng-repeat="tx in transactions">
+              <td>{{tx.from}}</td>
+              <td>{{tx.to}}</td>
+              <td>{{tx.amount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
   <script src="bower_components/angular/angular.js"></script>
   <script src="bower_components/angular-route/angular-route.js"></script>
   <script src="bower_components/angular-animate/angular-animate.js"></script>
   <script src="./app.js"></script>
   <script src="./contracts/solar.js"></script>
   <script src="./controllers.js"></script>
-  <script src="./services_c.js"></script>      
+  <script src="./services_c.js"></script>
   <script src="components/version/version.js"></script>
   <script src="components/version/version-directive.js"></script>
   <script src="components/version/interpolate-filter.js"></script>
   <script src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
 </body>
+
 </html>

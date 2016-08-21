@@ -9,12 +9,12 @@ angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
         var functionHashes = getFunctionHashes(ContractConfig.ApolloTrade.abi);
         updateAccount();        
         $scope.transactions = [];
-        $scope.energyPrice = contract.kWh_rate();
+        $scope.energyPrice = contract.kWh_rate().toNumber();
 
         $scope.buyEnergy = function() {
             // I can't really find a way to detect insufficient coin/energy from the contract's funcion call itself.
             var coinNeeded = $scope.buyAmount * contract.kWh_rate();
-            if (coinNeeded > $scope.coinBalance.toNumber()) {
+            if (coinNeeded > $scope.coinBalance) {
                 toastr.error("Insufficient coin");
                 return;
             }
@@ -32,7 +32,7 @@ angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
         }
 
         $scope.sellEnergy = function() {
-            if ($scope.sellEnergyAmount > $scope.energyBalance.toNumber()) {
+            if ($scope.sellEnergyAmount > $scope.energyBalance) {
                 toastr.error("Insufficient energy for sale");
                 return;
             }
@@ -98,9 +98,9 @@ angular.module('solarchain.controllers', ['ngAnimate', 'toastr']).
         });
         
         function updateAccount() {
-            $scope.coinBalance = contract.getCoinAccount({from: account});
-            $scope.energyBalance = contract.getEnergyAccount({from: account});                    
-            $scope.villageTotalEnergy = contract.totalEnergy();
+            $scope.coinBalance = contract.getCoinAccount({from: account}).toNumber();
+            $scope.energyBalance = contract.getEnergyAccount({from: account}).toNumber();
+            $scope.villageTotalEnergy = contract.totalEnergy().toNumber();
         }
 
         function getFunctionHashes(abi) {
