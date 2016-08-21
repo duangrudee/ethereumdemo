@@ -1,0 +1,1 @@
+"D:\Program Files\Ethereum\ethminer.exe" -F http://localhost:9000
