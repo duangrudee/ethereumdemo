@@ -18,10 +18,30 @@
   <link rel="stylesheet" href="webui/css/EikonWebUI.css">
   <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
   <style>
+    html {
+      font-size: 22px;
+    }
+
+    input[type=number] {
+      font-size: 20px;
+    }
+
+    .content-block header.level1 h6 {
+      font-size: 16px;
+    }
+
+    .content-block header.level2  h6 {
+      font-size: 14px;
+    }
+
+    button.large-style {
+      font-size: 20px;
+    }
+
     .main-panel {
       padding-top: 20px;
-      padding-left: 100px;
-      padding-right: 100px;
+      padding-left: 8%;
+      padding-right: 8%;
     }
     
     .content-block .content {
@@ -103,7 +123,7 @@
         <div>
           <label for="sell">Amount (kWh):</label>
           <input class="large-style" type="number" id="sell" ng-model="sellAmount" ng-change="sellAmountChanged()">
-          <button class="large-style" ng-click="sellEnergy()">Sell</button>
+          <button class="large-style cta" ng-click="sellEnergy()">Sell</button>
         </div>
       </div>
       <header class="level2">
@@ -113,7 +133,7 @@
         <div>
           <label for="buy">Amount (kWh):</label>
           <input class="large-style" type="number" id="buy" ng-model="buyAmount" ng-change="buyAmountChanged()">
-          <button class="large-style" ng-click="buyEnergy()">Buy</button>
+          <button class="large-style cta" ng-click="buyEnergy()">Buy</button>
         </div>
       </div>
     </div>
