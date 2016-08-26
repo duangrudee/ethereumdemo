@@ -124,6 +124,7 @@
           <label for="sell">Amount (kWh):</label>
           <input class="large-style" type="number" id="sell" ng-model="sellAmount" ng-change="sellAmountChanged()">
           <button class="large-style cta" ng-click="sellEnergy()">Sell</button>
+          <div ng-show="sellLoadingShow" class="throbber-midi"></div>
         </div>
       </div>
       <header class="level2">
@@ -134,6 +135,7 @@
           <label for="buy">Amount (kWh):</label>
           <input class="large-style" type="number" id="buy" ng-model="buyAmount" ng-change="buyAmountChanged()">
           <button class="large-style cta" ng-click="buyEnergy()">Buy</button>
+          <div ng-show="buyLoadingShow" class="throbber-midi"></div>
         </div>
       </div>
     </div>
