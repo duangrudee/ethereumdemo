@@ -80,11 +80,14 @@ I started the code by taking most part from [Solarchain-dashboard](https://githu
 Open the folder solarchain/greeter with VS Code
 Run 
 ```sh
-cd Sample app folder]
+cd <Sample app folder>
 npm install
 npm start
 ```
 
+### Contributors
+* Myself
+* (Nutdanai)[https://github.com/Moozz]
 
 
 
