@@ -37,3 +37,6 @@ admin.addPeer('enode://fe2e2b02de385907641dd5e16e0fec4a87067c4a33c7667eaf6df2968
 
 //checking account balance;
 web3.fromWei(eth.getBalance(eth.accounts[0]).toNumber(), "ether")
+
+//mine only 1 block
+miner.start(1); admin.sleepBlocks(1); miner.stop();

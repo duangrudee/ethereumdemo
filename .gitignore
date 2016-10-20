@@ -14,3 +14,4 @@ PrivateBlockSetup/privatenode2/dapp/*
 PrivateBlockSetup/privatenode2/keystore/*
 PrivateBlockSetup/privatenode2/history
 PrivateBlockSetup/privatenode2/nodekey
+/sampleapp/greeter/app/js/services_c.js

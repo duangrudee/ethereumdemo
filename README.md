@@ -29,9 +29,9 @@ Use "geth attach" from another console to create and unlock the account
 #### To create an account
 ```sh
    > personal.newAccount('passphase');
-   > personal.unlockAccount(eth.accounts[0], 'passphrase');
+   > personal.unlockAccount(eth.accounts[0], 'passphase');
    > personal.newAccount('passphase1');
-   > personal.unlockAccount(eth.accounts[1], 'passphrase1');
+   > personal.unlockAccount(eth.accounts[1], 'passphase1');
    > admin.nodeInfo; 	//copy enode info to use in node2
 ```
 You can use ethereume UI wallet to interact with this main node.
